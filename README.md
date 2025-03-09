@@ -71,11 +71,11 @@ Editar las variables del proyecto correspondientes a la conexión con la base de
 
 ## Documentación técnica
 
-- Consulta la [Arquitectura General del Sistema](docs/Arquitectura%20General%20del%20Sistema). 
-- Consulta la [Implementación Técnica de la Base de datos SGE](docs/IT%20-%20BD%20sge).
-- Consulta la [Implementación Técnica de la Base de datos API](docs/IT%20-%20BD%20api).
-- Consulta la [Implementación Técnica de la API](docs/IT%20-%20BD%20API).
+- Consulta la [Arquitectura General del Sistema](docs/Arquitectura%20General%20del%20Sistema.md). 
+- Consulta la [Implementación Técnica de la Base de datos SGE](docs/IT%20-%20BD%20sge.md).
+- Consulta la [Implementación Técnica de la Base de datos API](docs/IT%20-%20BD%20api.md).
+- Consulta la [Implementación Técnica de la API](docs/IT%20-%20BD%20API.md).
 
 ## Manuales de Usuario
 
-- Consulta la [EndPoints - API Rest](docs/EndPoints%20-%20API%20Rest). 
+- Consulta la [EndPoints - API Rest](docs/EndPoints%20-%20API%20Rest.md). 
