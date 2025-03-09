@@ -36,12 +36,10 @@ La API se desarrolla en **Django REST Framework** ~~y se ejecuta dentro de un co
 - Se validan permisos en SQL Server ~~utilizando `SESSION_CONTEXT`~~.
 - Se manejan logs y auditoría de acciones de los usuarios.
 
-%%
-✅ **Despliegue en Docker:**
+~~✅ **Despliegue en Docker:**~~
 
-- API empaquetada en un contenedor Docker.
-- Base de datos SQL Server puede estar en un contenedor separado o en un servidor externo.
-%%
+~~- API empaquetada en un contenedor Docker.~~
+~~- Base de datos SQL Server puede estar en un contenedor separado o en un servidor externo.~~
 
 ## Estructura del proyecto
 
