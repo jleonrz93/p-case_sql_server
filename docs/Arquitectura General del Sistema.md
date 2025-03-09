@@ -1,3 +1,5 @@
+# Arquitectura Genral del sistema
+
 El sistema se divide en dos grandes partes:
 
 1. **Base de datos en SQL Server** 
