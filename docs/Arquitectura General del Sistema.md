@@ -1,4 +1,4 @@
-# Arquitectura Genral del sistema
+# Arquitectura General del Sistema
 
 El sistema se divide en dos grandes partes:
 
@@ -35,5 +35,5 @@ De una manera muy amplia el flujo de interacción del sistema será el siguiente
 3. **Devolución de datos**
 	La API devuelve la información y la entrega al usuario.
 
-![[architecture_dm.svg]]
+![Arqui-Flujo de Interacción](architecture_dm.svg)
 
