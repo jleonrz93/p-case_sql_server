@@ -1,5 +1,7 @@
 # Arquitectura General del Sistema
 
+**SGE**: Sistema de Gestión Empresarial.
+
 El sistema se divide en dos grandes partes:
 
 1. **Base de datos en SQL Server** 
@@ -32,8 +34,17 @@ De una manera muy amplia el flujo de interacción del sistema será el siguiente
 	La API recibe una solicitud y autentica al usuario.
 2. **Consulta de permisos**
 	La API ejecuta una vista o procedimiento almacenado en SQL Server, que retorna solo los datos a los que el usuario tiene acceso.
-3. **Devolución de datos**
+3. **Extracción de datos**
+	La base de datos realiza las validaciones de restricción de permisos y, opera sobre los registros, columnas o tablas con acceso. El resultado lo retorna a la API.
+4. **Devolución de datos**
 	La API devuelve la información y la entrega al usuario.
 
 ![Arqui-Flujo de Interacción](attachments/architecture_dm.svg)
+**Algunas consideraciones**
+1. Al crear un usuario en la base de datos del sistema (SGE), un **trigger** genera automáticamente un registro en la tabla de usuarios de la base de datos de la API (API), incluyendo algunos de sus atributos.
+
+2. La API contará con su propia base de datos para gestionar la autenticación, lo que permitirá aislarla y proteger los datos almacenados en SGE.
+
+3. La API se autenticará en SQL Server utilizando un único usuario, pero siempre enviará el `us_id`. De esta forma, SQL Server podrá aplicar restricciones a nivel de tablas, columnas y registros según corresponda.
+
 
