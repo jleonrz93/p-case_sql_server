@@ -1,9 +1,7 @@
----
-author: jleonrz93
-last_date: 2025-03-12
----
 # Documentación de la Base de datos SCPNOM
 
+**Autor:** jleonrz93  
+**Fecha de actualización:** 12 de marzo de 2025  
 
 
 **Tabla de Contenido**
