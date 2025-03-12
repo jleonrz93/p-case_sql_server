@@ -1,0 +1,217 @@
+
+Documentacion Base de datos
+ - Usuarios creados admin_bd
+
+
+
+-- Usuario para api
+USE MiBaseDeDatos;
+GO
+CREATE LOGIN api_user WITH PASSWORD = 'ApiPass123!';
+CREATE USER api_user FOR LOGIN api_user;
+
+-- Otorgar permisos básicos
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::dbo TO api_user;
+GRANT EXECUTE ON SCHEMA::dbo TO api_user;
+
+
+
+Definicion de politicas de permisos
+    Permisos Granulares
+
+
+SEGUNDA BASE DE DATOS
+
+	errorWs id, descripcion
+	estadosWs id, descripcion
+	low webservices
+
+
+DISPARADOR SINCRONIZAR USUARIOS
+
+	
+CREATE TRIGGER trg_CrearUsuario
+ON Empleados
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Usuarios (EmpleadoID, Username, PasswordHash, RolID)
+    SELECT 
+        EmpleadoID, 
+        LOWER(LEFT(Nombre, 1) + Apellido),  -- Genera un username inicial
+        HASHBYTES('SHA2_256', 'password123'),  -- Contraseña por defecto
+        2  -- Rol por defecto (Ej: 2 = Empleado)
+    FROM inserted;
+END;
+
+
+
+PROCEDIMIENTOS - DIAPARADORES
+- una vez creada la base... listar todas las tablas de la base para dar permisos
+- Crear un empleado (salario 2 tablas, relaciones position cargo)
+- Actualizar un saladio
+- Actualizar un cargo
+- Revisar que un empleado tenga un solo salario activo
+- Revisar que un empleado tenga un solo cargo activo
+- El ultimo salario debe ser igual al de la tabla empleados
+- validar que una contraseña cumpla con lo minimo
+- Liquidar una nomina
+- pagar la nomina
+- sacar aprovicionamiento de la nomina
+- total nomina mes
+- total aprovicionamiento
+- total liquidacion,
+- Crea un nuevo contrato - acender, liquidar, despedit un empleado
+- si liuidacion pagana o cancelada no deja modificar
+- al modificar nominas acttualizar resumen y aprovicionamiento
+- crear recibo de nomina
+- reportes de login
+- reporte de nomina
+- reportes de usaurios
+
+
+
+
+Auditoria Nativa de SQL Server
+
+
+
+
+LOGICA DE PERMISOS
+
+🔲 Crear procedimientos almacenados para gestionar los permisos.
+🔲 Crear vistas con filtros dinámicos para restringir acceso a datos según usuario/rol.
+🔲 Utilizar funciones SQL y triggers para control de permisos.
+🔲 Implementar DCL (GRANT, REVOKE, DENY) para control de acceso.
+🔲 Configurar registro de auditoría (log_accesos).
+
+
+
+API
+
+🔲 Configurar Django y conectar con SQL Server.
+🔲 Crear modelos en Django (ORM).
+🔲 Implementar ViewSets y Serializers para exponer la API.
+🔲 Implementar middleware de seguridad para verificar permisos antes de responder.
+🔲 Pruebas con Postman para verificar acceso a datos según permisos.
+
+REPORTE
+
+🔲 Implementar consultas SQL para reportes de nómina.
+🔲 Crear endpoints en Django para exportar datos en CSV y PDF
+
+
+DOCUMENTACION
+
+🔲 Documentación del código (docstrings y comentarios).
+
+			def obtener_permisos(usuario_id: int):
+			"""
+			🔹 Obtiene la lista de permisos para un usuario específico.
+
+			📌 Parámetros:
+				usuario_id (int): ID del usuario en la base de datos.
+
+			📌 Retorno:
+				List[dict]: Lista de permisos con estructura {'tabla': str, 'permiso': bool}
+			"""
+			permisos = Permiso.objects.filter(usuario_id=usuario_id).values('tabla', 'permiso_lectura')
+			return list(permisos)
+
+
+🔲 Manual técnico (estructura BD, procedimientos, API endpoints).
+
+	🔲 Modelo ER
+	🔲 Descripción de las tablas y relaciones
+	🔲 Definición de cada campo (nombre, tipo de dato, restricciones, etc.)
+	🔲 Ejemplos de datos de prueba (INSERT con valores)
+	🔲 Políticas de seguridad y control de acceso
+	
+			
+			
+			
+			## 📌 **3. Documentación de la Implementación de la Lógica de Permisos y API**  
+			Es fundamental documentar cómo funciona la lógica de permisos dentro de SQL Server y Django API.  
+
+			### 🔹 **Documentación de Procedimientos Almacenados y Vistas**  
+			🔲 **Explicar el propósito de cada SP (Stored Procedure) y función.**  
+			🔲 **Indicar parámetros de entrada y salida.**  
+			🔲 **Ejemplo de uso con casos de prueba.**  
+
+			📌 **Ejemplo de documentación para SQL Server:**  
+			```sql
+			-- 🔹 Procedimiento para consultar registros según permisos del usuario
+			-- 📌 Autor: [Tu Nombre]
+			-- 📌 Fecha: [dd/mm/yyyy]
+			-- 📌 Descripción: Retorna los datos permitidos según el usuario.
+			-- 📌 Parámetros:
+			--   @usuario_id INT -> ID del usuario que consulta.
+			-- 📌 Retorno:
+			--   Tabla con los datos filtrados por permisos.
+
+			CREATE PROCEDURE sp_obtener_registros_permitidos
+				@usuario_id INT
+			AS
+			BEGIN
+				SELECT r.*
+				FROM registros r
+				INNER JOIN permisos_registros p ON r.id = p.registro_id
+				WHERE p.usuario_id = @usuario_id AND p.permiso_lectura = 1;
+			END;
+	
+	
+	
+			-- 🔹 Función que devuelve si un usuario tiene acceso a una tabla específica
+			-- 📌 Parámetros:
+			--    @usuario_id INT -> ID del usuario.
+			--    @tabla VARCHAR(50) -> Nombre de la tabla a validar.
+			-- 📌 Retorno:
+			--    BIT (1 = tiene acceso, 0 = no tiene acceso).
+
+			CREATE FUNCTION fn_tiene_acceso(@usuario_id INT, @tabla VARCHAR(50))
+			RETURNS BIT
+			AS
+			BEGIN
+				DECLARE @permiso BIT;
+				SELECT @permiso = permiso_lectura
+				FROM permisos_tablas
+				WHERE usuario_id = @usuario_id AND tabla = @tabla;
+
+				RETURN ISNULL(@permiso, 0);
+			END;
+			
+			
+			CREATE VIEW Vista_Empleados AS
+			SELECT e.*
+			FROM Empleados e
+			JOIN PermisosRegistros pr ON pr.registro_id = e.id
+			WHERE pr.usuario_id = SUSER_ID();
+
+
+	🔲 Nombre del endpoint y propósito.
+	🔲 Método HTTP (GET, POST, PUT, DELETE).
+	🔲 Ejemplo de request y response JSON.
+	
+			# 🔹 Endpoint: Obtener empleados según permisos
+			# 📌 Método: GET
+			# 📌 URL: /api/empleados/
+			# 📌 Descripción: Devuelve la lista de empleados permitidos según el usuario autenticado.
+
+			# 📌 Ejemplo de respuesta:
+			{
+				"id": 1,
+				"nombre": "Juan Pérez",
+				"salario": 5000000,
+				"departamento": "IT"
+			}
+		
+	
+🔲 Manual de usuario (cómo usar el sistema de permisos).
+
+Swagger / Postman → Para generar documentación interactiva.
+Markdown + GitHub Wiki → Para documentación estática.
+
+📌 Accede a la documentación en tu navegador:
+Swagger UI → http://127.0.0.1:8000/docs
+Redoc → http://127.0.0.1:8000/redoc
+
