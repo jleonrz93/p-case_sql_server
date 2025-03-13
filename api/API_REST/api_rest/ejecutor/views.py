@@ -1,34 +1,28 @@
-from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from django.db import connection
 import json
-
+from .serializers import EjecutarSPSerializer
 
 @api_view(['POST'])
 def ejecutar_sp(request):
     try:
-        user_name = request.data.get('UserName', 'admin')
-        password = request.data.get('Password', '')
-        procedure_name = request.data.get('ProcedureName', '')
+        # Validar los datos con el serializer
+        serializer = EjecutarSPSerializer(data=request.data)
+        if not serializer.is_valid():
+            return JsonResponse(serializer.errors, status=400)
 
-        # Obtener los parámetros como string separado por comas
-        params = request.data.get('Params', '')
+        # Extraer los datos validados
+        user_name = serializer.validated_data.get('UserName')
+        password = serializer.validated_data.get('Password', '')
+        procedure_name = serializer.validated_data.get('ProcedureName')
+        params = serializer.validated_data.get('Params', {})
 
         print("DEBUG: Datos recibidos en Django")  # 🔍 Depuración
         print(f"UserName: {user_name}, ProcedureName: {procedure_name}, Params: {params}")
 
-        # Convertir `params` en JSON válido
-        if isinstance(params, list) or isinstance(params, dict):
-            params = json.dumps(params)  # Convertir a JSON string
-        elif isinstance(params, str):
-            try:
-                # Si ya es JSON válido, lo dejamos igual
-                json.loads(params)
-            except json.JSONDecodeError:
-                return JsonResponse({"error": "Params debe ser un JSON válido"}, status=400)
-
-
+        # Convertir `params` a JSON string si es necesario
+        params = json.dumps(params)
 
         with connection.cursor() as cursor:
             cursor.execute("""
