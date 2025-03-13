@@ -124,5 +124,5 @@ LEFT JOIN Positions po ON ep_actual.EpPositionId = po.PositionId
 LEFT JOIN Departments dp ON po.PoDepartmentID = dp.DepartmentId
 
 -- WHERE em.EmployeeId = @EmployeeId;  -- Filtrar por empleado si es necesario
-
+GO
 ```

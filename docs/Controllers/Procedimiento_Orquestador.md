@@ -127,7 +127,7 @@ BEGIN
 
 	-- Ejecutar el procedimiento
 	-- ----------------------------------------------------
-	EXEC sp_GetUserPermissions_JSON 
+	EXEC @ProcedureName 
 		@Params = @ParamsProd,
 		@JsonResponse = @JsonResponseProd OUTPUT,
 		@StatusCode = @StatusCode OUTPUT,

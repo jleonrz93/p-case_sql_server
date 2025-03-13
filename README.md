@@ -118,6 +118,7 @@ Si desea ampliar la información anterior diríjase a cada uno de los documentos
 | ----------------------- | ------------------------------------------------------- | ---------------------------------------------- |
 | `sp_GetUserPermissions` | [Detalle](docs/Procedimientos/sp_GetUserPermissions.md) | Obtiene los permisos de un usuario determinado |
 | `sp_SyncSystemTables`   | [Detalle](docs/Procedimientos/sp_SyncSystemTables.md)   | Permite poblar las tablas del sistema          |
+| `sp_GetEmployeeDetalis` | [Detalle](docs/Procedimientos/sp_GetEmployeeDetalis.md) | Obtiene los datos de un empleado               |
 
 ### Disparadores
 
