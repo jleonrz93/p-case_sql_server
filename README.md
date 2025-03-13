@@ -111,6 +111,7 @@ Si desea ampliar la información anterior diríjase a cada uno de los documentos
 | ---------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | `vw_EmployeeDetails`         | [Detalle](docs/Vistas/vw_EmployeeDetails.md)         | Centraliza y optimiza la consulta de información detallada sobre los empleados del sistema |
 | `vw_UserPermissions_Details` | [Detalle](docs/Vistas/vw_UserPermissions_Details.md) | Proporciona una representación consolidada de los permisos asignados a cada usuario        |
+| ``vw_UserPayroll`            | [Detalle](docs/Vistas/vw_UserPermissions_Details.md) | Muestra la información de nomina liquidada por usaurio.                                    |
 
 ### Procedimientos
 
