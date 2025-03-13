@@ -1,1 +1,0 @@
-# Implementación Técnica - BD API

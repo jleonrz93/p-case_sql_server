@@ -45,11 +45,44 @@ La API se desarrolla en **Django REST Framework** ~~y se ejecuta dentro de un co
 
 ```bash
 /c-case_sql_server
-│── /app                     # Código fuente de la API
-│── requirements.txt         # Dependencias del proyecto
-│── README.md                # Documentación
+│── /app                              # Código fuente de la API
+│── /backup                           # backup de la aplicación
+│── /docs                             # Documentación del sistema
+│──── /Anexos                         # Documentos anexos del proyecto
+│──── /Controllers                    # Documentación tecnica de los modulos principales de SQL Srv
+│──── /Procedimientos                 # Documentación tecnica de los procedimientos de SQL Srv
+│──── /Vistas                         # Documentación tecnica de las vistas de SQL Srv
+│──── ArquitecturaGeneralSistema      # Doc. Técnico explicando diseño del sistema
+│──── ArquitecturaPermisosLogica      # Doc. Técnico explicando la logica y control de permisos
+│──── DocuBB_API                      # Doc. Técnico base de datos de la API
+│──── DocuBB_SCPNOM                   # Doc. Técnico base de datos de la sistema SQL
+│──── EndPonits_Listado               # Listado / Resumente de los EndPoints de la API
+│──── StateCodes                      # Codigos de estado en respuesta a ejecutar procedimientos y EndPonts
+│── /sql                              # Scripst SQL para creación, Insert, metadata
+│── /test                             # Scripts - Code para pruebas
+│── requirements.txt                  # Dependencias del proyecto
+│── README.md                         # Leeme
 
 ```
+
+## Diseño e Implementación del sistema
+
+Se ha divido el diseño en varios módulos de tal forma que se pueda garantizar su mantenimiento y escalabilidad de la siguiente manera:
+
+- **Control de autenticación**: encargado de todo el proceso de autenticación y validación del usuario en el sistema.
+- **Control de Logs**: gestiona e implementa los registro de log en cuanto a inicio de sesión, actividades en el sistema y ejecución de sentencias SQL.
+- **Control de Permisos**: gestiona los permisos en el sistema, valida que permisos tiene un usuario a nivel de tablas y registros.
+- **Procedimiento Orquestador**: procedimiento principal en SQLServ, este es el que recibe todas las peticiones desde la API y maneja la lógica dentro de SQLSrv.
+
+Si desea ampliar la información anterior diríjase a cada uno de los documentos correspondientes:
+
+| Documento                 | Enlace                                                    |
+| ------------------------- | --------------------------------------------------------- |
+| Control de Autenticación  | [Ver aquí](docs/Controllers/Autenticacion_Control.md)     |
+| Control de Permisos       | [Ver aquí](docs/Controllers/Permisos_Control.md)          |
+| Control de Logs           | [Ver aquí](docs/Controllers/Log_Control.md)               |
+| Procedimiento Orquestador | [Ver aquí](docs/Controllers/Procedimiento_Orquestador.md) |
+
 ## Instalación
 
 ### Requisitos
@@ -58,24 +91,34 @@ La API se desarrolla en **Django REST Framework** ~~y se ejecuta dentro de un co
 ### Sincronizando
 
 
-### Clonando el repositorio
-
-**1. Clonar el repositorio**
-
-```bash
-`git clone `
-```
-**2. Configurar variables de entorno**
-
-Editar las variables del proyecto correspondientes a la conexión con la base de datos.
-
 ## Documentación técnica
 
-- Consulta la [Arquitectura General del Sistema](docs/Arquitectura%20General%20del%20Sistema.md). 
-- Consulta la [Implementación Técnica de la Base de datos SGE](Doc_BD_SCPNOM.md).
-- Consulta la [Implementación Técnica de la Base de datos API](docs/IT%20-%20BD%20API.md).
-- Consulta la [Implementación Técnica de la API](docs/IT%20-%20BD%20API.md).
+- Consulta la [Arquitectura General del Sistema](docs/ArquitecturaGeneralSistema.md). 
+- Consulta la [Arquitectura Lógica de Permisos y Negocio](docs/ArquitecturaPermisosLogica.md). 
+- Consulta la [Implementación Técnica de la Base de datos SGE](DocuBD_SCPNOM.md).
+- Consulta la [Implementación Técnica de la Base de datos API](DocuBD_API.md).
 
-## Manuales de Usuario
+## Documentos de referencia
 
-- Consulta la [EndPoints - API Rest](docs/EndPoints%20-%20API%20Rest.md). 
+ - Consulta los estado y descripciones en respuesta a los procedimientos en [State Codes](docs/StateCodes.md).
+ - Consulta el listado de EndPonts de la API [EndPoints Listado](docs/EndPoints_Listado.md).
+
+## Elementos del sistema en SQLSrv
+
+### Vistas
+
+| Nombre                       | Documento                                            | Descripción                                                                                |
+| ---------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `vw_EmployeeDetails`         | [Detalle](docs/Vistas/vw_EmployeeDetails.md)         | Centraliza y optimiza la consulta de información detallada sobre los empleados del sistema |
+| `vw_UserPermissions_Details` | [Detalle](docs/Vistas/vw_UserPermissions_Details.md) | Proporciona una representación consolidada de los permisos asignados a cada usuario        |
+
+### Procedimientos
+
+| Nombre                  | Documento                                               | Descripción                                    |
+| ----------------------- | ------------------------------------------------------- | ---------------------------------------------- |
+| `sp_GetUserPermissions` | [Detalle](docs/Procedimientos/sp_GetUserPermissions.md) | Obtiene los permisos de un usuario determinado |
+| `sp_SyncSystemTables`   | [Detalle](docs/Procedimientos/sp_SyncSystemTables.md)   | Permite poblar las tablas del sistema          |
+
+### Disparadores
+
+- Los puede encontrar dentro del documento detalle relacionados a la Diseño e Implementación del sistema.
